@@ -249,7 +249,8 @@ tap_cli_create_usage(FILE *stream)
 		"[-r turn on read caching into leaf node] [-2 <path> "
 		"use secondary image (in mirror mode if no -s)] [-s "
 		"fail over to the secondary image on ENOSPC] "
-		"[-t request timeout in seconds]\n");
+		"[-t request timeout in seconds] "
+		"[-T enable thin provisioning]\n");
 }
 
 static int
@@ -266,7 +267,7 @@ tap_cli_create(int argc, char **argv)
 	timeout   = 0;
 
 	optind = 0;
-	while ((c = getopt(argc, argv, "a:Rd:e:r2:st:h")) != -1) {
+	while ((c = getopt(argc, argv, "a:Rd:e:r2:st:Th")) != -1) {
 		switch (c) {
 		case 'a':
 			args = optarg;
@@ -293,6 +294,9 @@ tap_cli_create(int argc, char **argv)
 			break;
 		case 't':
 			timeout = atoi(optarg);
+			break;
+		case 'T':
+			flags |= TAPDISK_MESSAGE_FLAG_THIN;
 			break;
 		case '?':
 			goto usage;
@@ -711,7 +715,8 @@ tap_cli_open_usage(FILE *stream)
 		"[-r turn on read caching into leaf node] [-2 <path> "
 		"use secondary image (in mirror mode if no -s)] [-s "
 		"fail over to the secondary image on ENOSPC] "
-		"[-t request timeout in seconds]\n");
+		"[-t request timeout in seconds] "
+		"[-T enable thin provisioning]\n");
 }
 
 static int
@@ -729,7 +734,7 @@ tap_cli_open(int argc, char **argv)
 	secondary = NULL;
 
 	optind = 0;
-	while ((c = getopt(argc, argv, "a:Rm:p:e:r2:st:h")) != -1) {
+	while ((c = getopt(argc, argv, "a:Rm:p:e:r2:st:Th")) != -1) {
 		switch (c) {
 		case 'p':
 			pid = atoi(optarg);
@@ -759,6 +764,9 @@ tap_cli_open(int argc, char **argv)
 			break;
 		case 't':
 			timeout = atoi(optarg);
+			break;
+		case 'T':
+			flags |= TAPDISK_MESSAGE_FLAG_THIN;
 			break;
 		case '?':
 			goto usage;

@@ -138,6 +138,7 @@ unsigned int SPB;
 #define VHD_FLAG_OPEN_STRICT         8
 #define VHD_FLAG_OPEN_QUERY          16
 #define VHD_FLAG_OPEN_PREALLOCATE    32
+#define VHD_FLAG_OPEN_THIN           64
 
 #define VHD_FLAG_BAT_LOCKED          1
 #define VHD_FLAG_BAT_WRITE_STARTED   2
@@ -390,6 +391,9 @@ update_next_db(struct vhd_state *s, uint64_t next_db)
   DPRINTF("update_next_db");
 
   s->next_db = next_db;
+
+  if (!(s->flags & VHD_FLAG_OPEN_THIN))
+    return;
 
   struct stats_t {
     int32_t len;
@@ -832,6 +836,8 @@ _vhd_open(td_driver_t *driver, const char *name, td_flag_t flags)
 			      VHD_FLAG_OPEN_QUIET  |
 			      VHD_FLAG_OPEN_RDONLY |
 			      VHD_FLAG_OPEN_NO_CACHE);
+	if (flags & TD_OPEN_THIN)
+		vhd_flags |= VHD_FLAG_OPEN_THIN;
 
 	/* pre-allocate for all but NFS and LVM storage */
 	driver->storage = tapdisk_storage_type(name);
