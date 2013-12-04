@@ -7,6 +7,7 @@ SUBDIRS += vhd
 SUBDIRS += control
 SUBDIRS += drivers
 SUBDIRS += include
+SUBDIRS += tmp
 
 if ENABLE_PART
 MAYBE_part = part
