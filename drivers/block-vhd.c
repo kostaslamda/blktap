@@ -837,7 +837,8 @@ _vhd_open(td_driver_t *driver, const char *name, td_flag_t flags)
 			      VHD_FLAG_OPEN_RDONLY |
 			      VHD_FLAG_OPEN_NO_CACHE);
 	if (flags & TD_OPEN_THIN)
-		vhd_flags |= VHD_FLAG_OPEN_THIN;
+		if(!(flags & TD_OPEN_RDONLY))
+			vhd_flags |= VHD_FLAG_OPEN_THIN;
 
 	/* pre-allocate for all but NFS and LVM storage */
 	driver->storage = tapdisk_storage_type(name);
